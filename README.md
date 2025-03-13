@@ -35,10 +35,9 @@ Ensure you have two **Ubuntu 20.04** VMs with fresh installations. Once the syst
 ```bash
 sudo apt update && sudo apt upgrade -y
 
-
-🚫 Disable Swap
+ 
+## 🚫 Disable Swap
 Kubernetes requires swap to be disabled. You can do this with:
 
-bash
-Copy
+```bash
 sudo swapoff -a

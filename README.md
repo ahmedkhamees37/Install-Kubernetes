@@ -142,3 +142,147 @@ kubectl get nodes
 ## 🎉 Congratulations!
 You have successfully installed Kubernetes using `kubeadm` and `k3s`. 🚀 Happy Learning!
 
+
+
+![image](https://github.com/user-attachments/assets/053ea2fd-0b44-4aac-93a6-464a318b904c)
+
+# 🚀 K3s Cluster Setup & Kubernetes Configurations
+
+## 📌 Overview
+This guide walks through setting up a **K3s cluster** with 1 control plane (server) and 1 worker node (agent). It also covers configuring `kubectl`, creating a custom plugin, and deploying an application using YAML.
+
+---
+
+## 🔧 1. Setup K3s Cluster (1 Control Plane + 1 Worker Node)
+### 🖥️ Install K3s on the Control Plane (Server)
+```sh
+curl -sfL https://get.k3s.io | sh -
+```
+This installs and starts the K3s control plane automatically.
+
+### 🔑 Retrieve the Node Token
+```sh
+sudo cat /var/lib/rancher/k3s/server/node-token
+```
+Copy the token for later use.
+
+### ⚙️ Install K3s on the Worker Node (Agent)
+Replace `<server-ip>` with the actual IP of your control plane node:
+```sh
+curl -sfL https://get.k3s.io | K3S_URL="https://<server-ip>:6443" K3S_TOKEN="<copied-token>" sh -
+```
+
+### ✅ Verify Nodes are Ready
+```sh
+kubectl get nodes
+```
+
+---
+
+## 📂 2. Create Namespace `iti-45`
+```sh
+kubectl create namespace iti-45
+```
+
+---
+
+## 🎯 3. Configure `kubectl` Context
+
+### 🌍 Add a New Context (`iti-context`)
+```sh
+kubectl config set-context iti-context --cluster=default --user=default --namespace=iti-45
+```
+
+### 🔄 Switch to the New Context
+```sh
+kubectl config use-context iti-context
+```
+
+### 🔍 Verify the Current Context
+```sh
+kubectl config current-context
+```
+
+---
+
+## 🛠️ 4. Create a Custom `kubectl` Plugin (`kubectl hostnames`)
+### 📄 Create the Plugin Script
+```sh
+mkdir -p ~/.kube/plugins
+nano ~/.kube/plugins/kubectl-hostnames
+```
+
+### ✍️ Add the Following Content
+```sh
+#!/bin/bash
+kubectl get nodes -o=jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+```
+
+### 🔓 Make the Script Executable
+```sh
+chmod +x ~/.kube/plugins/kubectl-hostnames
+```
+
+### 🚀 Move it to a Global Path
+```sh
+sudo mv ~/.kube/plugins/kubectl-hostnames /usr/local/bin/kubectl-hostnames
+```
+
+### 🔄 Test the Plugin
+```sh
+kubectl hostnames
+```
+
+---
+
+## 📜 5. Create Deployment (`deployment.yaml`)
+Create a file named `deployment.yaml` with the following content:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: iti-45
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        env:
+        - name: FOO
+          value: "ITI"
+```
+
+### 🚀 Deploy the Application
+```sh
+kubectl apply -f deployment.yaml
+```
+
+### 🔎 Verify Deployment
+```sh
+kubectl get deployments -n iti-45
+kubectl get pods -n iti-45
+```
+
+---
+
+## 🎯 Conclusion
+Congratulations! 🎉 You have successfully set up a **K3s cluster**, configured `kubectl`, created a custom plugin, and deployed an application. Now, you can scale and manage your cluster with ease. 🚀🔥
+
+For any issues, check the logs:
+```sh
+kubectl logs <pod-name> -n iti-45
+```
+
+Happy Kubernetes-ing! 🐳💙
+
+

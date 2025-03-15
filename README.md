@@ -1,3 +1,42 @@
+# Kubernetes Kubectl Autocomplete (Bash)
+
+## Enabling Autocomplete for `kubectl` in Bash
+
+To enable command-line autocomplete for `kubectl` in Bash, follow these steps:
+
+### **1. Enable Autocomplete for the Current Session**
+Run the following command in your terminal:
+```sh
+source <(kubectl completion bash)
+```
+This will enable autocomplete for the current session only.
+
+### **2. Make It Permanent**
+To enable autocomplete permanently, add the following line to your `~/.bashrc` or `~/.bash_profile`:
+```sh
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+```
+Then, reload your shell configuration:
+```sh
+source ~/.bashrc
+```
+
+### **3. Install Bash Completion (If Needed)**
+If you don't have `bash-completion` installed, install it first:
+- **Ubuntu/Debian**: `sudo apt install bash-completion`
+- **Mac (Homebrew)**: `brew install bash-completion`
+- **CentOS/RHEL**: `sudo yum install bash-completion`
+
+### **4. Verify the Autocomplete**
+Test by typing:
+```sh
+kubectl get [TAB]
+```
+You should see a list of available resources (e.g., pods, deployments, services, etc.).
+
+Now, `kubectl` command autocomplete is enabled in your Bash shell! 🚀
+
+
 ![image](https://github.com/user-attachments/assets/b6955384-8845-4d93-a854-e8af0fc3d223)
 
 # Kubernetes Installation Guide 🚀

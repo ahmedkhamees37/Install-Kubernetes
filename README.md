@@ -286,3 +286,53 @@ kubectl logs <pod-name> -n iti-45
 Happy Kubernetes-ing! 🐳💙
 
 
+
+
+
+
+![Screenshot 2025-03-15 123736](https://github.com/user-attachments/assets/976dd8c1-0f70-469f-ab4b-becb93cf60ff)
+
+# LAB - 5 🖥️🚀
+
+## Overview
+This lab focuses on **Role-Based Access Control (RBAC)** and **HELM** in Kubernetes. The tasks involve setting up user permissions and deploying applications using Helm.
+
+---
+
+## 1️⃣ RBAC (10 points) 🔐
+### Objective:
+Configure **RBAC policies** for the user `smoke` with specific permissions.
+
+### Tasks:
+- ✅ Grant `smoke` the ability to **create and delete** Pods, Deployments, and StatefulSets in the **applications** namespace.
+- ✅ Provide `smoke` with **view permissions** (similar to the default `view` ClusterRole) in **all namespaces except `kube-system`**.
+- ✅ Verify permissions using the following command:
+  ```sh
+  kubectl auth can-i <action> --as=smoke
+  ```
+
+---
+
+## 2️⃣ HELM (10 points) 🎩⚓
+### Objective:
+Deploy an **Apache web server** using **Helm**.
+
+### Task:
+- ✅ Install the Apache Helm chart using:
+  ```sh
+  helm install my-apache bitnami/apache
+  ```
+
+---
+
+## ✅ Completion Checklist
+- [ ] Configured RBAC policies correctly 🛠️
+- [ ] Verified permissions using `kubectl auth can-i` ✅
+- [ ] Installed Apache using Helm 📦
+- [ ] Confirmed deployment is running 🖥️
+
+### 💡 Need Help?
+For any issues, refer to Kubernetes [RBAC documentation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) or Helm [official documentation](https://helm.sh/docs/).
+
+🚀 Happy Learning! 🎯
+

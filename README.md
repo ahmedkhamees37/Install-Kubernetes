@@ -325,6 +325,173 @@ kubectl logs <pod-name> -n iti-45
 Happy Kubernetes-ing! 🐳💙
 
 
+![Screenshot 2025-03-15 123533](https://github.com/user-attachments/assets/7b32dd9f-0c65-4ab5-ba33-69a861bd73e9)
+
+# 🚀 Kubernetes Lab 3 - Ingress and Services
+
+## 🎯 **Objective**
+This lab focuses on deploying applications in a Kubernetes cluster, exposing them as services, and configuring an Ingress resource to route traffic.
+
+---
+
+## 📌 **Prerequisites**
+- ✅ A running Kubernetes cluster
+- ✅ `kubectl` installed and configured
+- ✅ Ingress controller (e.g., NGINX) installed in the cluster
+
+---
+
+## 🏗 **Step 1: Create the `world` Namespace**
+```sh
+kubectl create namespace world
+```
+
+---
+
+## 📦 **Step 2: Create Deployments**
+Create a file `deployments.yaml` with the following content:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: africa
+  namespace: world
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: africa
+  template:
+    metadata:
+      labels:
+        app: africa
+    spec:
+      containers:
+      - name: africa
+        image: husseingalal/africa:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: europe
+  namespace: world
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: europe
+  template:
+    metadata:
+      labels:
+        app: europe
+    spec:
+      containers:
+      - name: europe
+        image: husseingalal/europe:latest
+        ports:
+        - containerPort: 80
+```
+
+Apply the deployments:
+```sh
+kubectl apply -f deployments.yaml
+```
+
+---
+
+## 🌐 **Step 3: Expose Deployments as Services**
+Run the following commands to expose the deployments as ClusterIP services:
+
+```sh
+kubectl expose deployment africa --port=8888 --target-port=80 --type=ClusterIP --namespace=world
+kubectl expose deployment europe --port=8888 --target-port=80 --type=ClusterIP --namespace=world
+```
+
+---
+
+## 🔀 **Step 4: Create the Ingress Resource**
+Create a file `ingress.yaml` with the following content:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: world
+  namespace: world
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: world.universe.mine
+    http:
+      paths:
+      - path: /africa
+        pathType: Prefix
+        backend:
+          service:
+            name: africa
+            port:
+              number: 8888
+      - path: /europe
+        pathType: Prefix
+        backend:
+          service:
+            name: europe
+            port:
+              number: 8888
+```
+
+Apply the ingress configuration:
+```sh
+kubectl apply -f ingress.yaml
+```
+
+---
+
+## 🖥 **Step 5: Update `/etc/hosts`**
+On your local machine, add the following line to `/etc/hosts` (Linux/macOS) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
+
+```
+<your-k8s-node-ip> world.universe.mine
+```
+
+Replace `<your-k8s-node-ip>` with the actual IP of your Kubernetes node.
+
+---
+
+## ✅ **Step 6: Verify Setup**
+Check if the resources are created successfully:
+```sh
+kubectl get deployments -n world
+kubectl get services -n world
+kubectl get ingress -n world
+```
+
+Test access using:
+```sh
+curl http://world.universe.mine/africa
+curl http://world.universe.mine/europe
+```
+
+---
+
+### 🎉 **End of Message (EOMGY)** 🚀
+
+
+
+
+
+
+
+![Screenshot 2025-03-15 123736](https://github.com/user-attachments/assets/976dd8c1-0f70-469f-ab4b-becb93cf60ff)
+
+
+
+
 ![Screenshot 2025-03-15 123620](https://github.com/user-attachments/assets/a80598aa-4e45-417a-a693-b71ef8523a62)
 
 ![Screenshot 2025-03-15 123709](https://github.com/user-attachments/assets/342a48a1-8a4f-4330-8604-7e85d044684e)
@@ -501,169 +668,6 @@ Happy Coding! 🚀
 
 
 
-![Screenshot 2025-03-15 123533](https://github.com/user-attachments/assets/7b32dd9f-0c65-4ab5-ba33-69a861bd73e9)
-
-# 🚀 Kubernetes Lab 3 - Ingress and Services
-
-## 🎯 **Objective**
-This lab focuses on deploying applications in a Kubernetes cluster, exposing them as services, and configuring an Ingress resource to route traffic.
-
----
-
-## 📌 **Prerequisites**
-- ✅ A running Kubernetes cluster
-- ✅ `kubectl` installed and configured
-- ✅ Ingress controller (e.g., NGINX) installed in the cluster
-
----
-
-## 🏗 **Step 1: Create the `world` Namespace**
-```sh
-kubectl create namespace world
-```
-
----
-
-## 📦 **Step 2: Create Deployments**
-Create a file `deployments.yaml` with the following content:
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: africa
-  namespace: world
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: africa
-  template:
-    metadata:
-      labels:
-        app: africa
-    spec:
-      containers:
-      - name: africa
-        image: husseingalal/africa:latest
-        ports:
-        - containerPort: 80
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: europe
-  namespace: world
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: europe
-  template:
-    metadata:
-      labels:
-        app: europe
-    spec:
-      containers:
-      - name: europe
-        image: husseingalal/europe:latest
-        ports:
-        - containerPort: 80
-```
-
-Apply the deployments:
-```sh
-kubectl apply -f deployments.yaml
-```
-
----
-
-## 🌐 **Step 3: Expose Deployments as Services**
-Run the following commands to expose the deployments as ClusterIP services:
-
-```sh
-kubectl expose deployment africa --port=8888 --target-port=80 --type=ClusterIP --namespace=world
-kubectl expose deployment europe --port=8888 --target-port=80 --type=ClusterIP --namespace=world
-```
-
----
-
-## 🔀 **Step 4: Create the Ingress Resource**
-Create a file `ingress.yaml` with the following content:
-
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: world
-  namespace: world
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: world.universe.mine
-    http:
-      paths:
-      - path: /africa
-        pathType: Prefix
-        backend:
-          service:
-            name: africa
-            port:
-              number: 8888
-      - path: /europe
-        pathType: Prefix
-        backend:
-          service:
-            name: europe
-            port:
-              number: 8888
-```
-
-Apply the ingress configuration:
-```sh
-kubectl apply -f ingress.yaml
-```
-
----
-
-## 🖥 **Step 5: Update `/etc/hosts`**
-On your local machine, add the following line to `/etc/hosts` (Linux/macOS) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
-
-```
-<your-k8s-node-ip> world.universe.mine
-```
-
-Replace `<your-k8s-node-ip>` with the actual IP of your Kubernetes node.
-
----
-
-## ✅ **Step 6: Verify Setup**
-Check if the resources are created successfully:
-```sh
-kubectl get deployments -n world
-kubectl get services -n world
-kubectl get ingress -n world
-```
-
-Test access using:
-```sh
-curl http://world.universe.mine/africa
-curl http://world.universe.mine/europe
-```
-
----
-
-### 🎉 **End of Message (EOMGY)** 🚀
-
-
-
-
-
-
-
-![Screenshot 2025-03-15 123736](https://github.com/user-attachments/assets/976dd8c1-0f70-469f-ab4b-becb93cf60ff)
 
 # LAB - 5 🖥️🚀
 

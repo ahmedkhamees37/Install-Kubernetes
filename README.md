@@ -325,6 +325,182 @@ kubectl logs <pod-name> -n iti-45
 Happy Kubernetes-ing! 🐳💙
 
 
+![Screenshot 2025-03-15 123620](https://github.com/user-attachments/assets/a80598aa-4e45-417a-a693-b71ef8523a62)
+
+![Screenshot 2025-03-15 123709](https://github.com/user-attachments/assets/342a48a1-8a4f-4330-8604-7e85d044684e)
+
+# Kubernetes Lab 4
+
+## Task 1: Persistent Volumes
+
+### a. Create a PersistentVolume named `cool-volume`
+Save the following YAML as `pv.yaml`:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cool-volume
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  hostPath:
+    path: "/tmp/my-cool-vol"
+```
+
+Apply it:
+```sh
+kubectl apply -f pv.yaml
+```
+
+---
+
+### b. Create a PersistentVolumeClaim named `my-claim`
+Save the following YAML as `pvc.yaml`:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: ""
+```
+
+Apply it:
+```sh
+kubectl apply -f pvc.yaml
+```
+
+---
+
+### c. Create a Pod named `pvc-user`
+Save the following YAML as `pvc-pod.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-user
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: "/mnt/share/my-pvc"
+          name: my-volume
+  volumes:
+    - name: my-volume
+      persistentVolumeClaim:
+        claimName: my-claim
+```
+
+Apply it:
+```sh
+kubectl apply -f pvc-pod.yaml
+```
+
+---
+
+## Task 2: ConfigMaps
+
+### a. Create a file `/opt/cm.yaml`
+Save the following YAML as `/opt/cm.yaml`:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: birke
+data:
+  tree: birke
+  level: "3"
+  department: park
+```
+
+Apply it:
+```sh
+kubectl apply -f /opt/cm.yaml
+```
+
+---
+
+### b. Create a ConfigMap named `trauerweide`
+Save the following YAML as `trauerweide-cm.yaml`:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trauerweide
+data:
+  tree: trauerweide
+```
+
+Apply it:
+```sh
+kubectl apply -f trauerweide-cm.yaml
+```
+
+---
+
+### c. Create a Pod `pod1` with environment variable and volume mount
+Save the following YAML as `pod1.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod1
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+      env:
+        - name: TREE1
+          valueFrom:
+            configMapKeyRef:
+              name: trauerweide
+              key: tree
+      volumeMounts:
+        - name: config-volume
+          mountPath: "/etc/birke"
+  volumes:
+    - name: config-volume
+      configMap:
+        name: birke
+```
+
+Apply it:
+```sh
+kubectl apply -f pod1.yaml
+```
+
+---
+
+## Summary
+This README provides YAML configurations and instructions to:
+1. Set up a PersistentVolume, PersistentVolumeClaim, and a Pod that mounts the volume.
+2. Create ConfigMaps and a Pod that uses them as an environment variable and volume.
+
+Run the given `kubectl apply -f` commands to apply the configurations.
+
+Happy Coding! 🚀
+
+
+
+
+
+
 ![Screenshot 2025-03-15 123533](https://github.com/user-attachments/assets/7b32dd9f-0c65-4ab5-ba33-69a861bd73e9)
 
 # 🚀 Kubernetes Lab 3 - Ingress and Services

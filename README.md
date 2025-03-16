@@ -487,7 +487,7 @@ curl http://world.universe.mine/europe
 
 
 
-![Screenshot 2025-03-15 123736](https://github.com/user-attachments/assets/976dd8c1-0f70-469f-ab4b-becb93cf60ff)
+
 
 
 
@@ -666,7 +666,7 @@ Happy Coding! 🚀
 
 
 
-
+![Screenshot 2025-03-15 123736](https://github.com/user-attachments/assets/976dd8c1-0f70-469f-ab4b-becb93cf60ff)
 
 
 # LAB - 5 🖥️🚀

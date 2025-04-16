@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+spec:
+  containers:
+    - name: data-processor
+      image: data-processor
+  nodeSelector:
+    size: Large
+
+
+
+#kubect1 label nodes <node-name> <label-key>=<label-value>
+#kubect1 label nodes node-1 size=Large

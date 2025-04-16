@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  tolerations:
+  - key: "app"
+    operator: "Equal"
+    effect: "NoSchedule"
+
+
+
+#kubectl taint nodes master node.kubernetes.io/unreachable:NoExecute-
+#kubectl taint nodes node1 key1=value1:NoSchedule

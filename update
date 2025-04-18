@@ -1,0 +1,23 @@
+# Kubernetes Deployment Commands Cheat Sheet
+
+## Basic Deployment Operations
+
+| Command | Description |
+|---------|-------------|
+| `kubectl create -f deployment-definition.yml` | Create a deployment from a YAML file |
+| `kubectl get deployments` | List all deployments |
+
+## Update Operations
+
+| Command | Description |
+|---------|-------------|
+| `kubectl apply -f deployment-definition.yml` | Apply changes to a deployment |
+| `kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1` | Update the container image of a deployment |
+
+## Rollout Operations
+
+| Command | Description |
+|---------|-------------|
+| `kubectl rollout status deployment/myapp-deployment` | Check the rollout status of a deployment |
+| `kubectl rollout history deployment/myapp-deployment` | View rollout history of a deployment |
+| `kubectl rollout undo deployment/myapp-deployment` | Rollback to the previous deployment version |
